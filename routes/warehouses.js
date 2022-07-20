@@ -9,17 +9,43 @@ const readWarehouses = () => {
   const warehousesData = JSON.parse(warehousesDataFile);
   return warehousesData;
 };
+const readInventory = () => {
+  const inventoryDataFile = fs.readFileSync("./data/inventories.json");
+  const inventoryData = JSON.parse(inventoryDataFile);
+  return inventoryData;
+};
 
 //create endpoint to get all warehouses
-//GET
+//GET /warehouses
 router.get("/", (req, res) => {
   const warehousesData = readWarehouses();
 
   res.status(200).json(warehousesData);
 });
 
+//create endpoint to get a single warehouse information and inventory
+//GET /warehouses/:id
+router.get("/:id", (req, res) => {
+  const warehousesData = readWarehouses();
+  const inventoryData = readInventory();
+  const selectedWarehouse = warehousesData.find(
+    (warehouse) => warehouse.id === req.params.id
+  );
+  if (!selectedWarehouse) {
+    res.status(404).send("Warehouse not found");
+    return;
+  }
+
+  selectedInventory = inventoryData.filter(
+    (inventory) => inventory.warehouseID === req.params.id
+  );
+  selectedWarehouse.inventory = selectedInventory;
+
+  res.status(200).json(selectedWarehouse);
+});
+
 //Patch
-app.patch("/warehouse/:id", (req, res) => {
+router.patch("/warehouse/:id", (req, res) => {
   const warehouseID = req.params.id;
   //   res.json(students);
 });
