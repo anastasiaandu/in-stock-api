@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 // app.use('/inventories', inventoriesRoutes);
-// app.use('/warehouses', warehousesRoutes);
+app.use('/warehouses', warehousesRoutes);
 
 app
     .listen(PORT, () => {
