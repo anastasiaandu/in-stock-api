@@ -9,6 +9,7 @@ const readWarehouses = () => {
   const warehousesData = JSON.parse(warehousesDataFile);
   return warehousesData;
 };
+//create function to read the inventories file
 const readInventory = () => {
   const inventoryDataFile = fs.readFileSync("./data/inventories.json");
   const inventoryData = JSON.parse(inventoryDataFile);
@@ -24,7 +25,7 @@ router.get("/", (req, res) => {
 });
 
 //create endpoint to get a single warehouse information and inventory
-//GET /warehouses/:id
+//DELETE /warehouses/:id
 router.get("/:id", (req, res) => {
   const warehousesData = readWarehouses();
   const inventoryData = readInventory();
@@ -42,6 +43,30 @@ router.get("/:id", (req, res) => {
   selectedWarehouse.inventory = selectedInventory;
 
   res.status(200).json(selectedWarehouse);
+});
+
+// Deletes warehouse from the list and its inventory
+//DELETE /warehouses/:id
+router.delete("/:id", (req, res) => {
+  const warehousesData = readWarehouses();
+  const inventoryData = readInventory();
+  const selectedWarehouse = warehousesData.find(
+    (warehouse) => warehouse.id === req.params.id
+  );
+  if (!selectedWarehouse) {
+    res.status(404).send("Warehouse not found");
+    return;
+  }
+  const filteredWarehouses = warehousesData.filter((warehouse) => {
+    return warehouse.id !== req.params.id;
+  });
+  const filteredInventory = inventoryData.filter((item) => {
+    return item.warehouseID !== req.params.id;
+  });
+
+  fs.writeFileSync("./data/warehouses.json", JSON.stringify(warehousesData));
+  fs.writeFileSync("./data/warehouses.json", JSON.stringify(filteredInventory));
+  res.status(200).json(filteredWarehouses);
 });
 
 module.exports = router;
