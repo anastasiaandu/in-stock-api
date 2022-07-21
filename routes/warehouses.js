@@ -9,6 +9,7 @@ const readWarehouses = () => {
   const warehousesData = JSON.parse(warehousesDataFile);
   return warehousesData;
 };
+//create function to read the inventories file
 const readInventory = () => {
   const inventoryDataFile = fs.readFileSync("./data/inventories.json");
   const inventoryData = JSON.parse(inventoryDataFile);
@@ -24,7 +25,7 @@ router.get("/", (req, res) => {
 });
 
 //create endpoint to get a single warehouse information and inventory
-//GET /warehouses/:id
+//DELETE /warehouses/:id
 router.get("/:id", (req, res) => {
   const warehousesData = readWarehouses();
   const inventoryData = readInventory();
