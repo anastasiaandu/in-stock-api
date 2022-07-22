@@ -45,7 +45,6 @@ router.get("/:id", (req, res) => {
   res.status(200).json(selectedWarehouse);
 });
 
-<<<<<<< HEAD
 //Patch
 router.patch("/:id", (req, res) => {
   const warehousesData = readWarehouses();
@@ -71,7 +70,6 @@ router.patch("/:id", (req, res) => {
 
   res.status(202).json(warehouse);
 });
-=======
 // Deletes warehouse from the list and its inventory
 //DELETE /warehouses/:id
 router.delete("/:id", (req, res) => {
@@ -102,5 +100,4 @@ router.delete("/:id", (req, res) => {
   res.status(200).json(filteredWarehouses);
 });
 
->>>>>>> develop
 module.exports = router;
