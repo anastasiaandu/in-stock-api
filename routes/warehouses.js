@@ -25,7 +25,7 @@ router.get("/", (req, res) => {
 });
 
 //create endpoint to get a single warehouse information and inventory
-//DELETE /warehouses/:id
+//GET /warehouses/:id
 router.get("/:id", (req, res) => {
   const warehousesData = readWarehouses();
   const inventoryData = readInventory();
@@ -44,6 +44,7 @@ router.get("/:id", (req, res) => {
 
   res.status(200).json(selectedWarehouse);
 });
+
 
 // Deletes warehouse from the list and its inventory
 //DELETE /warehouses/:id
@@ -64,9 +65,11 @@ router.delete("/:id", (req, res) => {
     return item.warehouseID !== req.params.id;
   });
 
-  fs.writeFileSync("./data/warehouses.json", JSON.stringify(warehousesData));
-  fs.writeFileSync("./data/warehouses.json", JSON.stringify(filteredInventory));
+  fs.writeFileSync("./data/warehouses.json", JSON.stringify(filteredWarehouses));
+  fs.writeFileSync("./data/inventories.json", JSON.stringify(filteredInventory));
   res.status(200).json(filteredWarehouses);
 });
+
+
 
 module.exports = router;
