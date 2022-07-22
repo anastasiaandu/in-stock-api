@@ -59,12 +59,28 @@ router
 
     res.status(201).json(newInventory);
   });
-  
 
-// Changes inventory item based on id
-//PATCH /inventories/:id
+
+/**create endpoint to get a single inventory item
+GET /inventories/:id
+Changes inventory item based on id
+PATCH /inventories/:id
+Deletes inventory item from the list
+DELETE /inventories/:id
+**/
 router
-  .patch("/:id", (req, res) => {
+  .route('/:id')
+  .get((req, res) => {
+    const inventoryData = readData("./data/inventories.json");
+    const selectedInventory = inventoryData.find(inventory => inventory.id === req.params.id);
+    if (!selectedInventory) {
+      res.status(404).send("Inventory not found");
+      return;
+    }
+  
+    res.status(200).json(selectedInventory);
+  })
+  .patch((req, res) => {
     const inventoryData = readData("./data/inventories.json");
     const selectedInventoryItem = inventoryData.find(
       (item) => item.id === req.params.id
@@ -87,9 +103,8 @@ router
       JSON.stringify(inventoryData)
     );
     res.status(202).json(selectedInventoryItem);
-  }) // Deletes inventory item from the list
-  .delete("/:id", (req, res) => {
-    //DELETE /inventories/:id
+  }) 
+  .delete((req, res) => {
     const inventoryData = readData("./data/inventories.json");
     const selectedInventoryItem = inventoryData.find(
       (item) => item.id === req.params.id
