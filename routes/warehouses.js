@@ -16,13 +16,55 @@ const readInventory = () => {
   return inventoryData;
 };
 
-//create endpoint to get all warehouses
+
+//create endpoints to get all warehouses and post a warehouse
 //GET /warehouses
-router.get("/", (req, res) => {
+//POST /warehouses
+router
+  .route('/')
+  .get((req, res) => {
   const warehousesData = readWarehouses();
 
   res.status(200).json(warehousesData);
-});
+  })
+  .post((req, res) => {
+
+    if (!req.body.name || 
+        !req.body.address ||
+        !req.body.city ||
+        !req.body.country ||
+        !req.body.contact.name ||
+        !req.body.contact.position ||
+        !req.body.contact.phone ||
+        !req.body.contact.email
+       ) {
+      res.status(400).send('All fields are required');
+      return
+    }
+
+    const warehousesData = readWarehouses();
+
+    const newWarehouse = {
+      id: uniqid(),
+      name: req.body.name,
+      address: req.body.address,
+      city: req.body.city,
+      country: req.body.country,
+      contact: {
+        name: req.body.contact.name,
+        position: req.body.contact.position,
+        phone: req.body.contact.phone,
+        email: req.body.contact.email
+      }
+    }
+
+    warehousesData.push(newWarehouse);
+
+    fs.writeFileSync('./data/warehouses.json', JSON.stringify(warehousesData));
+
+    res.status(201).json(newWarehouse);
+  });
+
 
 //create endpoint to get a single warehouse information and inventory
 //GET /warehouses/:id
@@ -45,7 +87,9 @@ router.get("/:id", (req, res) => {
   res.status(200).json(selectedWarehouse);
 });
 
-//Patch
+
+//create endpoint to edit a warehouse
+//PATCH /warehouses/:id
 router.patch("/:id", (req, res) => {
   const warehousesData = readWarehouses();
   const warehouseID = req.params.id;
@@ -56,7 +100,6 @@ router.patch("/:id", (req, res) => {
   if (!warehouse)
     return res.status(404).json({ message: "Warehouse Not Found" });
 
-  console.log("Requested body", req.body);
   warehouse.name = req.body.name;
   warehouse.address = req.body.address;
   warehouse.city = req.body.city;
@@ -70,6 +113,8 @@ router.patch("/:id", (req, res) => {
 
   res.status(202).json(warehouse);
 });
+
+
 // Deletes warehouse from the list and its inventory
 //DELETE /warehouses/:id
 router.delete("/:id", (req, res) => {
