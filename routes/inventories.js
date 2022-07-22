@@ -40,8 +40,8 @@ router
     selectedInventoryItem.quantity = req.body.quantity;
 
     fs.writeFileSync(
-      "./data/warehouses.json",
-      JSON.stringify(selectedInventoryItem)
+      "./data/inventories.json",
+      JSON.stringify(inventoryData)
     );
     res.status(202).json(selectedInventoryItem);
   }) // Deletes inventory item from the list
