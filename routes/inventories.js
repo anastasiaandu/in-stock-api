@@ -10,18 +10,61 @@ const readData = (path) => {
   return parsedData;
 };
 
-//create endpoint to get all inventories
+//create endpoint to get all inventories and post an inventory
 //GET /inventories
-router.get("/", (req, res) => {
-  const inventoryData = readData("./data/inventories.json");
+//POST /inventory
+router
+  .route("/")
+  .get((req, res) => {
+    const inventoryData = readData("./data/inventories.json");
 
   res.status(200).json(inventoryData);
-});
+  })
+  .post((req, res) => {
+
+    if (!req.body.warehouseName || 
+        !req.body.itemName ||
+        !req.body.description ||
+        !req.body.category ||
+        !req.body.status ||
+        !req.body.quantity
+       ) {
+      res.status(400).send('All fields are required');
+      return
+    }
+
+    const inventoryData = readData('./data/inventories.json');
+    const warehousesData = readData('./data/warehouses.json');
+    const selectedWarehouse = warehousesData.find(warehouse => warehouse.name === req.body.warehouseName);
+
+    if (!selectedWarehouse) {
+      res.status(404).send('Warehouse not found');
+      return;
+    }
+
+    const newInventory = {
+      id: uniqid(),
+      warehouseID: selectedWarehouse.id,
+      warehouseName: req.body.warehouseName,
+      itemName: req.body.itemName,
+      description: req.body.description,
+      category: req.body.category,
+      status: req.body.status,
+      quantity: req.body.quantity
+    };
+
+    inventoryData.push(newInventory);
+
+    fs.writeFileSync('./data/inventories.json', JSON.stringify(inventoryData));
+
+    res.status(201).json(newInventory);
+  });
+  
 
 // Changes inventory item based on id
+//PATCH /inventories/:id
 router
   .patch("/:id", (req, res) => {
-    //PATCH /inventories/:id
     const inventoryData = readData("./data/inventories.json");
     const selectedInventoryItem = inventoryData.find(
       (item) => item.id === req.params.id
