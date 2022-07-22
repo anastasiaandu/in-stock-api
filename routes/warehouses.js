@@ -19,7 +19,7 @@ const readInventory = () => {
 
 //create endpoints to get all warehouses and post a warehouse
 //GET /warehouses
-//POST /warehouses
+//POST /warehouse
 router
   .route('/')
   .get((req, res) => {
@@ -56,7 +56,7 @@ router
         phone: req.body.contact.phone,
         email: req.body.contact.email
       }
-    }
+    };
 
     warehousesData.push(newWarehouse);
 
