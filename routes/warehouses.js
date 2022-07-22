@@ -47,7 +47,8 @@ router.get("/:id", (req, res) => {
 });
 
 
-//Patch
+//create endpoint to edit a warehouse
+//PATCH /warehouses/:id
 router.patch("/:id", (req, res) => {
   const warehousesData = readWarehouses();
   const warehouseID = req.params.id;
@@ -58,7 +59,6 @@ router.patch("/:id", (req, res) => {
   if (!warehouse)
     return res.status(404).json({ message: "Warehouse Not Found" });
 
-  console.log("Requested body", req.body);
   warehouse.name = req.body.name;
   warehouse.address = req.body.address;
   warehouse.city = req.body.city;
@@ -72,6 +72,10 @@ router.patch("/:id", (req, res) => {
 
   res.status(202).json(warehouse);
 });
+
+
+//create endpoint to post a warehouse
+//GET /warehouses/:id
 
 
 // Deletes warehouse from the list and its inventory
