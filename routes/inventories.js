@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require("fs");
 const uniqid = require("uniqid");
 
-//create function to read warehouses file
+//create function to read files
 const readData = (path) => {
   const dataFile = fs.readFileSync(path);
   const parsedData = JSON.parse(dataFile);
