@@ -10,8 +10,16 @@ const readData = (path) => {
   return parsedData;
 };
 
+//create endpoint to get all inventories
+//GET /inventories
+router.get("/", (req, res) => {
+  const inventoryData = readData("./data/inventories.json");
+
+  res.status(200).json(inventoryData);
+});
+
 // Deletes inventory item from the list
-//DELETE /inventory/:id
+//DELETE /inventories/:id
 router.delete("/:id", (req, res) => {
   const inventoryData = readData("./data/inventories.json");
   const selectedInventoryItem = inventoryData.find(
